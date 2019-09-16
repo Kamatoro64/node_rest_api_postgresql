@@ -6,6 +6,9 @@ const pool = require('./config').pool // const { pool } = require('./config')
 
 const app = express()
 
+// app set
+app.set('port', process.env.PORT || 3000);
+
 // Middlware
 
 app.use(morgan('combined'))
@@ -24,25 +27,25 @@ const getUsers = (request, response) => {
 }
 
 const getUserById = (request, response) => {
-    const id = parseInt(request.params.id)
-  
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json(results.rows)
-    })
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
 }
 
 const deleteUserById = (request, response) => {
-    const id = parseInt(request.params.id)
-  
-    pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json({ status: 'success', message: 'User deleted.' })
-    })
+  const id = parseInt(request.params.id)
+
+  pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json({ status: 'success', message: 'User deleted.' })
+  })
 }
 
 
@@ -72,6 +75,7 @@ app
 
 
 // Start server
-app.listen(process.env.PORT || 3002, () => {
-  console.log(`Server listening`)
+app.listen(app.get('port'), () => {
+  console.log(`Server is up and listening on port ${app.get('port')}...`);
 })
+
