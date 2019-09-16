@@ -11,14 +11,11 @@ const app = express()
 app.set('port', process.env.PORT || 3000);
 
 // Middlware
-
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
-
-app.use(routes);
-
+app.use('/api', routes); // You have to add the bodyParser middleware before routes! 
 
 // Start server
 app.listen(app.get('port'), () => {
