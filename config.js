@@ -2,11 +2,11 @@ require('dotenv').config()
 const Pool = require('pg').Pool //const { Pool } = require('pg')
 
 const pool = new Pool({
-  user: 'api_user',
-  host: 'localhost',
-  database: 'api',
-  password: 'api_user',
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 })
 
 /* For Heroku
