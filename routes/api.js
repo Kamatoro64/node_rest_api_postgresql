@@ -15,7 +15,7 @@ router.get('/users', (req, res) => {
 	})
 })
 
-// Add single user - Tested via Postman
+// Add single user - Tested via Postman and unit test
 router.post('/users',
 	[
 		// Request body validation
@@ -44,13 +44,17 @@ router.post('/users',
 		})
 	})
 
-// Get single user - Tested via Postman
+// Get single user - Tested via postman and unit test
 router.get('/users/:id', (req, res) => {
 	const id = parseInt(req.params.id)
 
 	pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
 		if (error) {
 			throw error
+		}
+
+		if (results.rows.length === 0) {
+			return res.status(404).json({ status: 'error', msg: "User not found" })
 		}
 		res.status(200).json(results.rows)
 	})
@@ -60,12 +64,31 @@ router.get('/users/:id', (req, res) => {
 router.delete('/users/:id', (req, res) => {
 	const id = parseInt(req.params.id)
 
-	pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+	// Check if the user exists
+
+	pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+
 		if (error) {
 			throw error
 		}
-		res.status(200).json({ status: 'success', message: 'User deleted.' })
+
+		// If user does not exist return status code 404
+		if (results.rows.length === 0) {
+			return res.status(404).json({ status: 'error', msg: "User not found" })
+		}
+
+		// Otherwise proceed with delete
+		pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+			if (error) {
+				throw error
+			}
+			res.status(200).json({ status: 'success', msg: 'User deleted' })
+		})
+
+
+
 	})
+
 })
 
 module.exports = router;

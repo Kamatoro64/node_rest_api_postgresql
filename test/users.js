@@ -152,3 +152,62 @@ describe('/POST /api/users', () => {
 	});
 
 });
+
+// GET Single user by id, user exists
+describe('/GET /api/users/1', () => {
+	it('it should GET user with id=1', (done) => {
+		chai.request(server)
+			.get('/api/users/1')
+			.end((err, res) => {
+				res.should.have.property('status', 200);
+				res.body.should.be.json;
+				res.body.length.should.be.eql(1);
+				assert.equal(res.body[0].id, 1)
+				done();
+			});
+	});
+});
+
+// GET Single user by id, user does not exists
+describe('/GET /api/users/0', () => {
+	it('it should return status code 404 when user with id=0 is requested', (done) => {
+		chai.request(server)
+			.get('/api/users/0')
+			.end((err, res) => {
+				res.should.have.property('status', 404);
+				res.body.should.be.json;
+				assert.equal(res.body.msg, "User not found")
+				done();
+			});
+	});
+});
+
+// DELETE Single user by id, user exists
+describe('/DELETE /api/users/1', () => {
+	it('it should DELETE user with id=1', (done) => {
+		chai.request(server)
+			.delete('/api/users/1')
+			.end((err, res) => {
+				res.should.have.property('status', 200);
+				res.body.should.be.json;
+				assert.equal(res.body.status, "success");
+				assert.equal(res.body.msg, "User deleted");
+				done();
+			});
+	});
+});
+
+// GET Single user by id, user does not exists
+describe('/GET /api/users/0', () => {
+	it('it should return status code 404 when user with id=0 is requested', (done) => {
+		chai.request(server)
+			.delete('/api/users/0')
+			.end((err, res) => {
+				res.should.have.property('status', 404);
+				res.body.should.be.json;
+				assert.equal(res.body.status, "error");
+				assert.equal(res.body.msg, "User not found");
+				done();
+			});
+	});
+});
