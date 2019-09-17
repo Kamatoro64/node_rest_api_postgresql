@@ -21,8 +21,7 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users (name, email)
-VALUES  ('John', 'john@example.com');
+INSERT INTO users (name, email) VALUES  ('John', 'john@example.com');
 
 INSERT INTO users (name, email)
 VALUES  ('Jane', 'jane@example.com');

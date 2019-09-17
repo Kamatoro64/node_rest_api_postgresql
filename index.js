@@ -26,4 +26,5 @@ app.listen(app.get('port'), () => {
   console.log(`Server is up and listening on port ${app.get('port')}...`);
 })
 
+// For testing via Mocha
 module.exports = app;

@@ -6,6 +6,7 @@ const chaiHttp = require('chai-http');
 const server = require('../index');
 const pool = require('../config').pool;
 const should = require('should')
+const assert = require('assert');
 
 chai.use(chaiHttp);
 
@@ -34,8 +35,10 @@ pool.query("DROP TABLE IF EXISTS users", (error, results) => {
 	})
 })
 
-beforeEach(done => setTimeout(done, 1000));
 
+beforeEach(done => setTimeout(done, 200));
+
+// GET All Users
 describe('/GET /api/users', () => {
 	it('it should GET all the users', (done) => {
 		chai.request(server)
@@ -50,14 +53,7 @@ describe('/GET /api/users', () => {
 	});
 });
 
-
-
-
-
-
-
-
-
+// POST a single user - Well formatted
 describe('/POST /api/users', () => {
 	it('it should POST a user', (done) => {
 		let user = {
@@ -79,17 +75,80 @@ describe('/POST /api/users', () => {
 
 });
 
-
-describe('/GET /api/users', () => {
-	it('it should GET all the users', (done) => {
+// POST a single user - Missing Email & Name
+describe('/POST /api/users', () => {
+	it('it should not insert users if both name and email are not provided', (done) => {
+		let user = {
+			name: "",
+			email: ""
+		}
 		chai.request(server)
-			.get('/api/users')
+			.post('/api/users')
+			.send(user)
 			.end((err, res) => {
-				res.should.have.property('status', 200);
-				res.body.should.be.json;
-				res.body.should.be.array;
-				res.body.length.should.be.eql(2);
+				res.should.have.property('status', 422);
 				done();
 			});
 	});
+
+});
+
+// POST a single user - Missing Name
+describe('/POST /api/users', () => {
+	it('it should not insert users if name is not provided', (done) => {
+		let user = {
+			name: "",
+			email: "sophia@example.com"
+		}
+		chai.request(server)
+			.post('/api/users')
+			.send(user)
+			.end((err, res) => {
+				res.should.have.property('status', 422);
+				assert.equal(res.body.errors[0].msg, 'name is required');
+				done();
+			});
+	});
+
+});
+
+
+// POST a single user - Missing Email
+describe('/POST /api/users', () => {
+	it('it should not insert users if email is not provided', (done) => {
+		let user = {
+			name: "Sophia",
+			email: ""
+		}
+		chai.request(server)
+			.post('/api/users')
+			.send(user)
+			.end((err, res) => {
+				res.should.have.property('status', 422);
+				assert.equal(res.body.errors[0].msg, 'email is required');
+				assert.equal(res.body.errors[1].msg, 'Invalid email format');
+				done();
+			});
+	});
+
+});
+
+
+// POST a single user - Incorrect Email format
+describe('/POST /api/users', () => {
+	it('it should not insert users if email is in incorrect format', (done) => {
+		let user = {
+			name: "Sophia",
+			email: "sophiaexample.com"
+		}
+		chai.request(server)
+			.post('/api/users')
+			.send(user)
+			.end((err, res) => {
+				res.should.have.property('status', 422);
+				assert.equal(res.body.errors[0].msg, 'Invalid email format');
+				done();
+			});
+	});
+
 });
