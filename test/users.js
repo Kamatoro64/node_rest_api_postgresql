@@ -36,7 +36,7 @@ pool.query("DROP TABLE IF EXISTS users", (error, results) => {
 })
 
 
-beforeEach(done => setTimeout(done, 200));
+beforeEach(done => setTimeout(done, 500));
 
 // GET All Users
 describe('/GET /api/users', () => {
