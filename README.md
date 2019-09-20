@@ -42,4 +42,16 @@ node-backend-postgres_app.1.v4v0nh1xkbts@docker-desktop     | Server is up and l
 node-backend-postgres_app.4.i5psria1hu7v@docker-desktop     | Server is up and listening on port 3000...
 ```
 
+## Have some fun with replicas
 
+In a terminal window, run the following command to check the number of replicas every 0.5 seconds:
+
+``` sh
+while true; do docker service ls; sleep 0.5; done
+```
+
+In a second window, run the following command to start killing the node backend containers (replicas) randomly every 2 seconds and watch the replica count drop and recover due to the deployment's restart_policy!
+
+``` sh
+while true; do for container in $(docker ps | grep  "zng/express-backend"| awk '{print $1}'); do docker kill $container; sleep 2; done; done
+```
