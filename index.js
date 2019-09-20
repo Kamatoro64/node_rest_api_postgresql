@@ -14,7 +14,7 @@ app.set('port', process.env.PORT || 3000);
 
 // Use morgan middleware if NODE_ENV is not set to test (it is set in users.js)
 if (process.env.NODE_ENV !== "test") {
-  app.use(morgan('combined'))
+  app.use(morgan('tiny'))
 }
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

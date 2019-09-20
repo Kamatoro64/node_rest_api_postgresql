@@ -7,6 +7,7 @@ const pool = require('../config').pool // const { pool } = require('./config')
 
 // Get list of users - Tested via Postman
 router.get('/users', (req, res) => {
+
 	pool.query('SELECT * FROM users', (error, results) => {
 		if (error) {
 			throw error
