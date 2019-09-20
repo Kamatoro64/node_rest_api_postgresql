@@ -55,3 +55,17 @@ In a second window, run the following command to start killing the node backend 
 ``` sh
 while true; do for container in $(docker ps | grep  "zng/express-backend"| awk '{print $1}'); do docker kill $container; sleep 2; done; done
 ```
+
+## Shutting it down
+
+### Take down the application: 
+
+``` 
+docker stack rm node-backend-postgres
+```
+
+### Take down the swarm
+
+```
+docker swarm leave --force
+```
