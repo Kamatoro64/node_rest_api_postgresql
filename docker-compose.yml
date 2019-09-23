@@ -5,7 +5,8 @@ services:
     environment:
       POSTGRES_USER: postgres
     volumes:
-      - ./scripts:/docker-entrypoint-initdb.d
+      # NOTE: Scripts are executed in alphabetical order
+      - ./scripts:/docker-entrypoint-initdb.d 
     # This won't be necessary if we only need our backend CONTAINER to access postgres since the Dockerfile of postgres already EXPOSE port 54321 - TESTED
 #    ports:
 #      - "5432:5432"
